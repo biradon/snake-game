@@ -1,6 +1,6 @@
 # 🐍 Snake Game
 
-A simple **Snake Game** built using **HTML, CSS, and JavaScript**. This project is based on the [YouTube tutorial by Coding Journey](https://www.youtube.com/watch?v=uyhzCBEGaBY), with additional features planned for enhancement.
+A simple **Snake Game** built using **HTML, CSS, and JavaScript**. This project is based on the [YouTube tutorial by @howtobecomeadeveloper](https://www.youtube.com/watch?v=05kCgeIIjkY), with additional features planned for enhancement (in the future 🤪)
 
 ## 🎮 Gameplay
 - Control the snake using the **arrow keys** (`↑`, `↓`, `←`, `→`).
