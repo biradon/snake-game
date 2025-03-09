@@ -7,6 +7,9 @@ const highScoreText = document.getElementById('highScore')
 const gridSize = 20
 let snake = [{x: 10, y: 10}]
 let food = generateFood()
+let wall = []
+
+
 let direction = 'right'
 let gameInterval;
 let gameSpeedDelay = 200
@@ -18,6 +21,7 @@ function draw() {
     board.innerHTML = ''
     drawSnake()
     drawFood()
+    drawWall()
     updateScore()
 }
 
@@ -59,6 +63,20 @@ function generateFood() {
     return {x, y}
 }
 
+function drawWall() {
+    wall.forEach((segment) => {
+        const wallElement = createGameElement('div', 'wall')
+        setPosition(wallElement, segment)
+        board.appendChild(wallElement)
+    })
+}
+
+function generateWall() {
+    const x = Math.floor(Math.random() * gridSize) + 1
+    const y = Math.floor(Math.random() * gridSize) + 1
+    return {x, y}
+}
+
 
 function move() {
     const head = {...snake[0]}
@@ -83,13 +101,19 @@ function move() {
         food = generateFood()
         increaseSpeed()
         checkCollision()
-        clearInterval(gameInterval) // Clear past interval
+        if (snake.length % 2 == 0) {
+            extraWall = generateWall()
+            wall.push(extraWall)
+            console.log(wall)
+        }
+        clearInterval(gameInterval)
         gameInterval = setInterval(() => {
             move()
             checkCollision()
             draw()
         }, gameSpeedDelay)
-    } else {
+    } 
+    else {
         snake.pop()
     }
 }
@@ -154,12 +178,22 @@ function checkCollision() {
     if (head.x < 1 || head.x > gridSize || head.y < 1 || head.y > gridSize) {
       resetGame();
     }
+
+    if (head.x == wall.x && head.y == wall.y) {
+        resetGame();
+      }
   
-    for (let i = 1; i < snake.length; i++) {
+    for (let i = 0; i < snake.length; i++) {
       if (head.x === snake[i].x && head.y === snake[i].y) {
         resetGame();
       }
     }
+
+    for (let i = 1; i < wall.length; i++) {
+        if (head.x === wall[i].x && head.y === wall[i].y) {
+          resetGame();
+        }
+      }
   }
 
 
@@ -168,6 +202,7 @@ function resetGame() {
     stopGame()
     snake = [{x: 10, y: 10}]
     food = generateFood()
+    wall = []
     direction = 'right'
     gameSpeedDelay = 200
     updateScore()
