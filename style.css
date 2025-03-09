@@ -89,3 +89,9 @@ body,
 #logo {
     position: absolute;
 }
+
+
+.wall {
+    background-color: #A31D1D;
+    border: #FFCF50 5px solid;
+}
