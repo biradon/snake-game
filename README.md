@@ -28,3 +28,7 @@ A simple **Snake Game** built using **HTML, CSS, and JavaScript**. This project 
 5. Try to get the highest score!
 
 
+## 👇 Live Demo here 
+
+https://snakegame0603.netlify.app/
+
