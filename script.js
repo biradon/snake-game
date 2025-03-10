@@ -9,6 +9,7 @@ const gridSize = 20
 let snake = [{x: 10, y: 10}]
 let food = generateFood()
 let wall = []
+let star = generateStar()
 
 
 let direction = 'right'
@@ -16,6 +17,8 @@ let gameInterval;
 let gameSpeedDelay = 200
 let gameStarted = false
 let highScore = 0
+let currentScore = 0
+let doubleScoreState = false
 
 
 function draw() {
@@ -23,6 +26,7 @@ function draw() {
     drawSnake()
     drawFood()
     drawWall()
+    drawStar()
     updateScore()
 }
 
@@ -42,13 +46,11 @@ function createGameElement(tag, className) {
 }
 
 
-
 // Set position of snake and food
 function setPosition(element ,position) {
     element.style.gridColumnStart  = position.x
     element.style.gridRowStart  = position.y
 }
-
 
 
 function drawFood() {
@@ -67,6 +69,14 @@ function drawWall() {
     })
 }
 
+function drawStar() {
+    if (gameStarted) {
+        const starElement = createGameElement('div', 'star')
+        setPosition(starElement, star)
+        board.appendChild(starElement)
+    }
+}
+
 
 function generateFood() {
     const x = Math.floor(Math.random() * gridSize) + 1
@@ -76,6 +86,12 @@ function generateFood() {
 
 
 function generateWall() {
+    const x = Math.floor(Math.random() * gridSize) + 1
+    const y = Math.floor(Math.random() * gridSize) + 1
+    return {x, y}
+}
+
+function generateStar() {
     const x = Math.floor(Math.random() * gridSize) + 1
     const y = Math.floor(Math.random() * gridSize) + 1
     return {x, y}
@@ -101,8 +117,18 @@ function move() {
     }
     snake.unshift(head)
 
+    if (head.x === star.x && head.y === star.y) {
+        activateDoublePoints()
+        star = {}
+    }
+
 
     if (head.x === food.x && head.y === food.y) {
+        if (doubleScoreState) {
+            currentScore += 2
+        } else {
+            currentScore++
+        }
         food = generateFood()
         while (wall.some(item => item.x === food.x && item.y === food.y)) {
             food = generateFood()
@@ -113,6 +139,9 @@ function move() {
             extraWall = generateWall()
             wall.push(extraWall)
             console.log(wall)
+        }
+        if (snake.length % 9 == 0) {
+            star = generateStar()
         }
         clearInterval(gameInterval)
         gameInterval = setInterval(() => {
@@ -217,7 +246,7 @@ function resetGame() {
 }
 
 function updateScore() {
-    const currentScore = snake.length - 1
+    // const currentScore = snake.length - 1
     score.textContent  = currentScore.toString().padStart(3, '0')
 }
 
@@ -230,12 +259,28 @@ function stopGame() {
 }
 
 function updateHighsScore() {
-    const currentScore = snake.length - 1
     if (currentScore > highScore) {
         highScore = currentScore
         highScoreText.textContent = highScore.toString().padStart(3, '0')
     }
     highScoreText.style.display = 'block'
+}
+
+function activateDoublePoints() {
+    doubleScoreState = true
+    let timeLeft = 10
+    const countDown = setInterval(() => {
+        explainText.style.display = 'block'
+        explainText.innerHTML = `🔥 Double Points Active for ${timeLeft} Seconds! 🔥`
+        timeLeft--
+
+        if (timeLeft < 0) {
+            clearInterval(countDown)
+            doubleScoreState = false
+            explainText.style.display = 'none'
+            explainText.innerHTML = "Eat food ⚪ Doge wall 🟥 X2 Point 🟡"
+        }
+    }, 1000)
 }
 
  
