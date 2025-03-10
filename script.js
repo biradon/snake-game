@@ -9,7 +9,6 @@ const gridSize = 20
 let snake = [{x: 10, y: 10}]
 let food = generateFood()
 let wall = []
-let star = generateStar()
 
 
 let direction = 'right'
@@ -24,7 +23,6 @@ function draw() {
     drawSnake()
     drawFood()
     drawWall()
-    drawStar()
     updateScore()
 }
 
@@ -69,13 +67,6 @@ function drawWall() {
     })
 }
 
-function drawStar() {
-    if (gameStarted) {
-        const starElement = createGameElement('div', 'star')
-        setPosition(starElement, star)
-        board.appendChild(starElement)
-    }
-}
 
 function generateFood() {
     const x = Math.floor(Math.random() * gridSize) + 1
@@ -90,11 +81,6 @@ function generateWall() {
     return {x, y}
 }
 
-function generateStar() {
-    const x = Math.floor(Math.random() * gridSize) + 1
-    const y = Math.floor(Math.random() * gridSize) + 1
-    return {x, y}
-}
 
 
 function move() {
@@ -118,13 +104,12 @@ function move() {
 
     if (head.x === food.x && head.y === food.y) {
         food = generateFood()
-        star = generateStar()
         while (wall.some(item => item.x === food.x && item.y === food.y)) {
             food = generateFood()
         }
         increaseSpeed()
         checkCollision()
-        if (snake.length % 1 == 0) {
+        if (snake.length % 2 == 0) {
             extraWall = generateWall()
             wall.push(extraWall)
             console.log(wall)
