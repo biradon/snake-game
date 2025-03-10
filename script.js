@@ -99,9 +99,12 @@ function move() {
 
     if (head.x === food.x && head.y === food.y) {
         food = generateFood()
+        while (wall.some(item => item.x === food.x && item.y === food.y)) {
+            food = generateFood()
+        }
         increaseSpeed()
         checkCollision()
-        if (snake.length % 2 == 0) {
+        if (snake.length % 1 == 0) {
             extraWall = generateWall()
             wall.push(extraWall)
             console.log(wall)
@@ -117,7 +120,6 @@ function move() {
         snake.pop()
     }
 }
-
 
 
 
