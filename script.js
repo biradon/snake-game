@@ -183,13 +183,13 @@ function checkCollision() {
         resetGame();
       }
   
-    for (let i = 0; i < snake.length; i++) {
+    for (let i = 1; i < snake.length; i++) {
       if (head.x === snake[i].x && head.y === snake[i].y) {
         resetGame();
       }
     }
 
-    for (let i = 1; i < wall.length; i++) {
+    for (let i = 0; i < wall.length; i++) {
         if (head.x === wall[i].x && head.y === wall[i].y) {
           resetGame();
         }
