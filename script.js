@@ -1,13 +1,15 @@
 const board = document.getElementById("game-board")
-const instructionText = document.getElementById('instruction-text')
-const logo = document.getElementById('logo')
 const score = document.getElementById('score')
 const highScoreText = document.getElementById('highScore')
+const explainText = document.getElementById("explain-text")
+const logo = document.getElementById('logo')
+const instruction = document.getElementById('instruction-text')
 
 const gridSize = 20
 let snake = [{x: 10, y: 10}]
 let food = generateFood()
 let wall = []
+let star = generateStar()
 
 
 let direction = 'right'
@@ -22,6 +24,7 @@ function draw() {
     drawSnake()
     drawFood()
     drawWall()
+    drawStar()
     updateScore()
 }
 
@@ -41,6 +44,7 @@ function createGameElement(tag, className) {
 }
 
 
+
 // Set position of snake and food
 function setPosition(element ,position) {
     element.style.gridColumnStart  = position.x
@@ -57,12 +61,6 @@ function drawFood() {
     }
 }
 
-function generateFood() {
-    const x = Math.floor(Math.random() * gridSize) + 1
-    const y = Math.floor(Math.random() * gridSize) + 1
-    return {x, y}
-}
-
 function drawWall() {
     wall.forEach((segment) => {
         const wallElement = createGameElement('div', 'wall')
@@ -71,7 +69,28 @@ function drawWall() {
     })
 }
 
+function drawStar() {
+    if (gameStarted) {
+        const starElement = createGameElement('div', 'star')
+        setPosition(starElement, star)
+        board.appendChild(starElement)
+    }
+}
+
+function generateFood() {
+    const x = Math.floor(Math.random() * gridSize) + 1
+    const y = Math.floor(Math.random() * gridSize) + 1
+    return {x, y}
+}
+
+
 function generateWall() {
+    const x = Math.floor(Math.random() * gridSize) + 1
+    const y = Math.floor(Math.random() * gridSize) + 1
+    return {x, y}
+}
+
+function generateStar() {
     const x = Math.floor(Math.random() * gridSize) + 1
     const y = Math.floor(Math.random() * gridSize) + 1
     return {x, y}
@@ -99,6 +118,7 @@ function move() {
 
     if (head.x === food.x && head.y === food.y) {
         food = generateFood()
+        star = generateStar()
         while (wall.some(item => item.x === food.x && item.y === food.y)) {
             food = generateFood()
         }
@@ -125,8 +145,9 @@ function move() {
 
 function startGame() {
     gameStarted = true
-    instructionText.style.display = 'none'
+    explainText.style.display = 'none'
     logo.style.display = 'none'
+    instruction.style.display = 'none'
     gameInterval = setInterval(() => {
         move()
         checkCollision()
@@ -217,9 +238,10 @@ function updateScore() {
 
 function stopGame() {
     clearInterval(gameInterval)
-    gameStarted = false
-    instructionText.style.display = 'block'
+    explainText.style.display = 'block'
     logo.style.display = 'block'
+    instruction.style.display = 'block'
+    gameStarted = false
 }
 
 function updateHighsScore() {
@@ -230,3 +252,5 @@ function updateHighsScore() {
     }
     highScoreText.style.display = 'block'
 }
+
+ 
